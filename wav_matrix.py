@@ -4,7 +4,7 @@ import alsaaudio as aa
 import numpy as np
 
 
-WAV_FILE = wave.open('/home/rhea/dev/audevs/feelin.wav', 'r')
+WAV_FILE = wave.open('/home/perses/dev/audevs/audio.wav', 'r')
 SAMPLE_RATE = WAV_FILE.getframerate()
 NO_CHANNELS = WAV_FILE.getnchannels()
 CHUNK = 2048
@@ -58,10 +58,15 @@ def calculate_levels(data, chunk, sample_rate):
 
 
 def col_to_row(columns):
-    rows = [0 for x in range(8)]
-    j = 0
+    rows = [1, 2, 3, 4, 5, 6, 7, 8]
+    j = 1
     for i in columns:
-        rows[j] = " " * i + "X"
+        if i >= j:
+            #print "yes"
+            rows[j] = str(rows[j]) + "X"
+        else:
+            #print "no"
+            rows[j] = str(rows[j]) + " "
         print rows[j]
         j = j + 1
 
@@ -71,16 +76,23 @@ while RAW_DATA != '':
     """
     output.write(RAW_DATA)
     display = calculate_levels(RAW_DATA, CHUNK, SAMPLE_RATE)
+    #rotate = zip(*display[::-1])
+    #print rotate
+    rows = [[], [], [], [], [], [], [], []]
+    #for i in display:
+        #print "XX" * i
+        #print "XX" * i
+
+    j = 0
     for i in display:
-        print "XX" * i
-        print "XX" * i
-    #print "XX" * display[0]
-    #print "XX" * display[1]
-    #print "XX" * display[2]
-    #print "XX" * display[3]
-    #print "XX" * display[4]
-    #print "XX" * display[5]
-    #print "XX" * display[6]
-    #print "XX" * display[7]
-    #print "X" * display[8]
+        k = 0
+        while k < int(i):
+            rows[j].append("X")
+            k = k + 1
+        while len(rows[j]) < 8:
+            rows[j].append(" ")
+
+        j = j + 1
+    for y in rows:
+        print y
     RAW_DATA = WAV_FILE.readframes(CHUNK)
