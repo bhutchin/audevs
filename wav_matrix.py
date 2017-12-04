@@ -1,8 +1,20 @@
 import wave
 from struct import unpack
 import sys
+import time
 import alsaaudio as aa
 import numpy as np
+
+
+print "Top goes here"
+print ""
+print ""
+print ""
+print ""
+print ""
+print ""
+print "Bottom goes here"
+time.sleep(7)
 
 WAV_FILE = wave.open('/home/rhea/dev/audevs/audio.wav', 'r')
 SAMPLE_RATE = WAV_FILE.getframerate()
