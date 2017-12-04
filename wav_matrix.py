@@ -1,10 +1,10 @@
 import wave
 from struct import unpack
+import sys
 import alsaaudio as aa
 import numpy as np
 
-
-WAV_FILE = wave.open('/home/perses/dev/audevs/audio.wav', 'r')
+WAV_FILE = wave.open('/home/rhea/dev/audevs/audio.wav', 'r')
 SAMPLE_RATE = WAV_FILE.getframerate()
 NO_CHANNELS = WAV_FILE.getnchannels()
 CHUNK = 2048
@@ -14,6 +14,11 @@ output.setchannels(NO_CHANNELS)
 output.setrate(SAMPLE_RATE)
 output.setformat(aa.PCM_FORMAT_S16_LE)
 output.setperiodsize(CHUNK)
+
+if len(sys.argv) < 2:
+    pass
+else:
+    WAV_FILE = wave.open(sys.argv[1], 'r')
 
 
 def piff(val):
