@@ -53,22 +53,8 @@ def calculate_levels(data, chunk, sample_rate):
     matrix[7] = int(np.mean(power[piff(10000):piff(20000):1]))
     matrix = np.divide(np.multiply(matrix, 1), 1000000)
     matrix = matrix.clip(0, 8)
-    #col_to_row(matrix)
     return matrix
 
-
-def col_to_row(columns):
-    rows = [1, 2, 3, 4, 5, 6, 7, 8]
-    j = 1
-    for i in columns:
-        if i >= j:
-            #print "yes"
-            rows[j] = str(rows[j]) + "X"
-        else:
-            #print "no"
-            rows[j] = str(rows[j]) + " "
-        print rows[j]
-        j = j + 1
 
 RAW_DATA = WAV_FILE.readframes(CHUNK)
 while RAW_DATA != '':
@@ -76,13 +62,7 @@ while RAW_DATA != '':
     """
     output.write(RAW_DATA)
     display = calculate_levels(RAW_DATA, CHUNK, SAMPLE_RATE)
-    #rotate = zip(*display[::-1])
-    #print rotate
     rows = [[], [], [], [], [], [], [], []]
-    #for i in display:
-        #print "XX" * i
-        #print "XX" * i
-
     j = 0
     for i in display:
         k = 0
@@ -93,6 +73,7 @@ while RAW_DATA != '':
             rows[j].append(" ")
 
         j = j + 1
-    for y in rows:
+    rotate = reversed(zip(*rows[::1]))
+    for y in rotate:
         print y
     RAW_DATA = WAV_FILE.readframes(CHUNK)
