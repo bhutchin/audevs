@@ -4,9 +4,9 @@ import numpy as np
 import math
 import wave
 
-chunk = 1024
+chunk = 256
 FORMAT = pyaudio.paInt32
-CHANNELS = 1
+CHANNELS = 2
 RATE = 44100
 
 
@@ -23,19 +23,30 @@ wf = wave.open('/home/perses/dev/audevs/audio.wav', 'rb')
 p = pyaudio.PyAudio()
 
 stream = p.open(
-    format = FORMAT,
-    channels = CHANNELS,
-    rate = RATE,
-    input = True,
-    output = True,
-    frames_per_buffer = chunk
+    format= FORMAT,
+    channels= CHANNELS,
+    rate= RATE,
+    input= True,
+    output= True,
+    frames_per_buffer=chunk,
+    input_device_index=6
     )
 
-data = wf.readframes(chunk)
+out_stream = p.open(
+    format= FORMAT,
+    channels=2,
+    rate= RATE,
+    input= True,
+    output= True,
+    frames_per_buffer= chunk,
+    input_device_index=6
+    )
+
+data = stream.read(chunk)
 #for i in range(0, RATE / chunk * RECORD_SECONDS):
 while data != '':
-    data = wf.readframes(chunk)
+    data = stream.read(chunk)
     Frequency = pitch(data)
     print "%f Frequency" %Frequency
-    stream.write(data)
+    out_stream.write(data)
 
