@@ -39,7 +39,7 @@ out_stream = p.open(
     input= True,
     output= True,
     frames_per_buffer= chunk,
-    input_device_index=6
+    input_device_index=10
     )
 
 data = stream.read(chunk)
@@ -48,5 +48,8 @@ while data != '':
     data = stream.read(chunk)
     Frequency = pitch(data)
     print "%f Frequency" %Frequency
+    #try:
     out_stream.write(data)
+    #except exception as e:
+    #    pass
 

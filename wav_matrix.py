@@ -1,5 +1,6 @@
 import wave
 from struct import unpack
+import pyaudio
 import sys
 import time
 import alsaaudio as aa
@@ -14,18 +15,43 @@ print ""
 print ""
 print ""
 print "Bottom goes here"
-time.sleep(7)
+#time.sleep(7)
 
-WAV_FILE = wave.open('/home/rhea/dev/audevs/audio.wav', 'r')
+WAV_FILE = wave.open('/home/perses/dev/audevs/audio.wav', 'r')
 SAMPLE_RATE = WAV_FILE.getframerate()
 NO_CHANNELS = WAV_FILE.getnchannels()
-CHUNK = 2048
+CHUNK = 1024
+
+FORMAT = pyaudio.paInt32
+CHANNELS = 1
+RATE = 44100
+p = pyaudio.PyAudio()
 
 output = aa.PCM(aa.PCM_PLAYBACK, aa.PCM_NORMAL)
 output.setchannels(NO_CHANNELS)
 output.setrate(SAMPLE_RATE)
 output.setformat(aa.PCM_FORMAT_S16_LE)
 output.setperiodsize(CHUNK)
+
+stream = p.open(
+    format=FORMAT,
+    channels=CHANNELS,
+    rate=RATE,
+    input=True,
+    output=True,
+    frames_per_buffer=CHUNK,
+    input_device_index=6
+    )
+
+out_stream = p.open(
+    format=FORMAT,
+    channels=2,
+    rate=RATE,
+    input=True,
+    output=True,
+    frames_per_buffer=CHUNK,
+    input_device_index=6
+    )
 
 if len(sys.argv) < 2:
     pass
@@ -73,11 +99,12 @@ def calculate_levels(data, chunk, sample_rate):
     return matrix
 
 
-RAW_DATA = WAV_FILE.readframes(CHUNK)
+#RAW_DATA = WAV_FILE.readframes(CHUNK)
+RAW_DATA = stream.read(CHUNK)
 while RAW_DATA != '':
     """
     """
-    output.write(RAW_DATA)
+    out_stream.write(RAW_DATA)
     display = calculate_levels(RAW_DATA, CHUNK, SAMPLE_RATE)
     rows = [[], [], [], [], [], [], [], []]
     j = 0
@@ -93,4 +120,5 @@ while RAW_DATA != '':
     rotate = reversed(zip(*rows[::1]))
     for y in rotate:
         print y
-    RAW_DATA = WAV_FILE.readframes(CHUNK)
+    #RAW_DATA = WAV_FILE.readframes(CHUNK)
+    stream.read(CHUNK)
