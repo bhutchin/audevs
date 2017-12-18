@@ -68,14 +68,13 @@ out_stream = p.open(
     )
 
 data = stream.read(chunk)
-#for i in range(0, RATE / chunk * RECORD_SECONDS):
 while data != '':
     data = stream.read(chunk)
-    out_stream.write(data)
-    frequency = pitch(data)
-    print "%f Frequency" %frequency
-    #try:
+    try:
+        out_stream.write(data)
+    except IOError as e:
+        pass
 
-    #except exception as e:
-    #    pass
+    frequency = pitch(data)
+    print "%f Frequency" % frequency
 
