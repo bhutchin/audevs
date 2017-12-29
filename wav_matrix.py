@@ -108,7 +108,7 @@ def calculate_levels(data):
     return matrix
 
 
-def draw_matrix():
+def draw_ascii():
     """
 
     :return:
@@ -133,7 +133,16 @@ def draw_matrix():
                 print l
 
 
+def led_values():
+    data = in_stream.read(CHUNK)
+    while data != '':
+        data = in_stream.read(CHUNK)
+        out_stream.write(data)
+        display = calculate_levels(data)
+        print display
+
+
 if __name__ == '__main__':
     input_device, output_device = gen_device()
     in_stream, out_stream = gen_stream(input_device, output_device)
-    draw_matrix()
+    draw_ascii()
