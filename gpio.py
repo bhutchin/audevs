@@ -10,9 +10,15 @@ def create_device():
     return device
 
 
-for y in range(8):
-     for x in range(8):
-         with canvas(device) as draw:
-             draw.point((x,y), fill="green")
-         time.sleep(0.5)
+def draw_point(device):
+    for y in range(8):
+         for x in range(8):
+             with canvas(device) as draw:
+                 draw.point((x,y), fill="green")
+             time.sleep(0.5)
 
+
+if __name__ == '__main__':
+    display = create_device()
+    draw_point(display)
+    
