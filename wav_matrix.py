@@ -1,6 +1,7 @@
 from struct import unpack
 import pyaudio
 import numpy as np
+import wave
 
 CHUNK = 256
 FORMAT = pyaudio.paInt32
@@ -8,6 +9,7 @@ CHANNELS = 2
 RATE = 44100
 P = pyaudio.PyAudio()
 
+wf = wave.open('/tmp/audio.wav', 'rb')
 
 def gen_device():
     """
@@ -113,9 +115,9 @@ def draw_ascii():
 
     :return:
     """
-    data = in_stream.read(CHUNK)
+    data = wf.readframes(CHUNK)
     while data != '':
-        data = in_stream.read(CHUNK)
+        data = wf.readframes(CHUNK)
         out_stream.write(data)
         display = calculate_levels(data)
         rows = [[], [], [], [], [], [], [], []]
@@ -134,9 +136,9 @@ def draw_ascii():
 
 
 def led_values():
-    data = in_stream.read(CHUNK)
+    data = wf.readframes(CHUNK)
     while data != '':
-        data = in_stream.read(CHUNK)
+        data = wf.readframes(CHUNK)
         out_stream.write(data)
         display = calculate_levels(data)
         print display
