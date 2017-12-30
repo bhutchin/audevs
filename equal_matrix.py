@@ -140,10 +140,13 @@ def led_values():
         data = in_stream.read(CHUNK)
         out_stream.write(data)
         display = calculate_levels(data)
-        print display
+        j = 1
+        for i in display:
+            print "coords" + i + "," + j
+            j = j + 1
 
 
 if __name__ == '__main__':
     input_device, output_device = gen_device()
     in_stream, out_stream = gen_stream(input_device, output_device)
-    draw_ascii()
+    led_values()
