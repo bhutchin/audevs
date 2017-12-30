@@ -1,6 +1,16 @@
 from struct import unpack
 import pyaudio
 import numpy as np
+from luma.core.interface.serial import spi, noop
+from luma.core.render import canvas
+from luma.led_matrix.device import max7219
+import time
+
+
+def create_device():
+    serial = spi(port=0, device=0, gpio=noop())
+    device = max7219(serial)
+    return device
 
 
 CHUNK = 256
@@ -134,19 +144,23 @@ def draw_ascii():
                 print l
 
 
-def led_values():
+def led_values(device):
     data = in_stream.read(CHUNK)
     while data != '':
         data = in_stream.read(CHUNK)
         out_stream.write(data)
         display = calculate_levels(data)
-        j = 1
         for i in display:
-            print "coords" + i + "," + j
-            j = j + 1
+            k = 0
+            while k < int(i):
+                with canvas(device) as draw:
+                    draw.point((i, k), fill="green")
+                #print "coords" + str(i) + "," + str(k)
+                k = k + 1
 
 
 if __name__ == '__main__':
     input_device, output_device = gen_device()
     in_stream, out_stream = gen_stream(input_device, output_device)
-    led_values()
+    led_matrix = create_device()
+    led_values(led_matrix)
